@@ -35,8 +35,9 @@ class VpsApiApplication < Sinatra::Base
   get '/memory/:container_id', provides: :json do
     content_type :json
     begin
+      container_id = params[:container_id].gsub /[^a-z0-9]/, ''
       result = {}
-      File.open([settings.memory_cgroup_path, settings.docker_folder, params[:container_id], settings.memory_stat].join('/'), 'r') do |f|
+      File.open([settings.memory_cgroup_path, settings.docker_folder, container_id, settings.memory_stat].join('/'), 'r') do |f|
         while line = f.gets
           key, val = line.split(' ')
           result[key] = val
