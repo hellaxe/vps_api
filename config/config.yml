@@ -1,8 +1,10 @@
 development:
   memory_cgroup_path: /home/hell/projects/temp/memory
   memory_stat: memory.stat
+  memory_usage: memory.usage_in_bytes
   docker_folder: docker
 production:
   memory_cgroup_path: /sys/fs/cgroup/memory
   memory_stat: memory.stat
+  memory_usage: memory.usage_in_bytes
   docker_folder: docker

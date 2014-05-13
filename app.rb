@@ -54,4 +54,43 @@ class VpsApiApplication < Sinatra::Base
 
   end
 
+  get '/memory_usage', provides: :json do
+  content_type :json
+  begin
+    result = {}
+    File.open([settings.memory_cgroup_path, settings.memory_usage].join('/'), 'r') do |f|
+      while line = f.gets
+        result[:memory_usage] = line.gsub(/[^0-9]/, '')
+      end
+    end
+    result.to_json
+  rescue Errno::ENOENT
+    status 404
+    {status: 404, reason: 'Not found'}.to_json
+  rescue
+    status 500
+    {status: 500, reason: 'Error'}.to_json
+  end
+  end
+
+  get '/memory_usage/:container_id', provides: :json do
+    content_type :json
+    begin
+      container_id = params[:container_id].gsub /[^a-z0-9]/, ''
+      result = {}
+      File.open([settings.memory_cgroup_path, settings.docker_folder, container_id, settings.memory_usage].join('/'), 'r') do |f|
+        while line = f.gets
+          result[:memory_usage] = line.gsub(/[^0-9]/, '')
+        end
+      end
+      result.to_json
+    rescue Errno::ENOENT
+      status 404
+      {status: 404, reason: 'Not found'}.to_json
+    rescue
+      status 500
+      {status: 500, reason: 'Error'}.to_json
+    end
+end
+
 end
