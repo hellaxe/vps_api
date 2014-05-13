@@ -39,6 +39,9 @@ namespace :deploy do
   desc 'Restart application'
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
+      execute 'service thin restart'
+      #execute 'thin restart -C /etc/thin_api'
+      #execute :bundle,  'exec thin restart -C /etc/thin_api'
       # Your restart mechanism here, for example:
       # execute :touch, release_path.join('tmp/restart.txt')
     end
