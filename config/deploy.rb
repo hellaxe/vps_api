@@ -40,10 +40,6 @@ namespace :deploy do
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
       execute 'service thin restart'
-      #execute 'thin restart -C /etc/thin_api'
-      #execute :bundle,  'exec thin restart -C /etc/thin_api'
-      # Your restart mechanism here, for example:
-      # execute :touch, release_path.join('tmp/restart.txt')
     end
   end
 
@@ -51,10 +47,7 @@ namespace :deploy do
 
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
-      # Here we can do anything such as:
-      # within release_path do
-      #   execute :rake, 'cache:clear'
-      # end
+
     end
   end
 
